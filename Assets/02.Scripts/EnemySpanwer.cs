@@ -13,12 +13,12 @@ public class EnemySpanwer : MonoBehaviour
     {
         while (_enemyCount < 10)
         {
-            yield return new WaitForSeconds(3f);
-
             var enemy = poolManager.GetFromPool<Transform>("Enemy_HoverBot"); 
             enemy.position = enemySpawnPoint.position;
             enemy.rotation = quaternion.identity;
             _enemyCount++;
+            
+            yield return new WaitForSeconds(3f);
         }
     }
 }
