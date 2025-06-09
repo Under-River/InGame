@@ -50,17 +50,20 @@ public class Currency
         _value += addedValue;
     }
 
-    public void Subtract(int subtrahendValue)
+    public bool TryBuy(int value)
     {
-        if(subtrahendValue < 0)
+        if(value < 0)
         {
-            throw new Exception("감소 값은 음수가 될 수 없습니다.");
-        }
-        if(_value < subtrahendValue)
-        {
-            throw new Exception("보유 금액보다 많이 차감할 수 없습니다.");
+            throw new Exception("추가 값은 음수가 될 수 없습니다.");
         }
 
-        _value -= subtrahendValue;
+        if(_value < value)
+        {
+            return false;
+        }
+
+        _value -= value; // 샀다.
+
+        return true; // 싰다 성공.
     }
 }

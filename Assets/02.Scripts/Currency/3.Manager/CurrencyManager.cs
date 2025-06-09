@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // 아키텍쳐: 설계 그 잡채(설계마다 철학이 있다.)
@@ -9,7 +11,15 @@ public class CurrencyManager : MonoBehaviour
 {
     public static CurrencyManager Instance;
 
-    private Dictionary<ECurrencyType, Currency> _currencies = new Dictionary<ECurrencyType, Currency>();
+    private Dictionary<ECurrencyType, Currency> _currencies;
+    // 도메인에 변화가 있을때 호출
+    public event Action OnDataChanged;
+    private CurrencyRepository _repository;
+
+
+    // 로버트 C 마틴 : 미리하는 성능 최적화 90%는 필요없다.
+    // public event Action OnGoldChanged;
+    // public event Action OnDiamondChanged;
 
     private void Awake()
     {
@@ -28,13 +38,42 @@ public class CurrencyManager : MonoBehaviour
 
     private void Init()
     {
-        for(int i = 0; i < (int)ECurrencyType.Count; i++)
+        // 초기화
+        _currencies = new Dictionary<ECurrencyType, Currency>((int)ECurrencyType.Count);
+        // 레포지토리(깃허브)
+        _repository = new CurrencyRepository();
+
+        List<CurrencyDTO> loadedCurrencies = _repository.Load();
+        if(loadedCurrencies == null)
         {
-            ECurrencyType type = (ECurrencyType)i;
-            // 골드, 다이아몬드 등을 0 값으로 생산 후 딕셔너리에 삽입
-            Currency currency = new Currency(type, 0);
-            _currencies.Add(type, currency);
+            for(int i = 0; i < (int)ECurrencyType.Count; i++)
+            {
+                ECurrencyType type = (ECurrencyType)i;
+
+                // 골드, 다이아몬드 등을 0 값으로 생산 후 딕셔너리에 삽입
+                Currency currency = new Currency(type, 0);
+                _currencies.Add(type, currency);
+            }
+            return;
         }
+        else
+        {
+            foreach(CurrencyDTO data in loadedCurrencies)
+            {
+                Currency currency = new Currency(data.Type, data.Value);
+                _currencies.Add(data.Type, currency);
+            }
+        }
+    }
+
+    private List<CurrencyDTO> ToDtoList()
+    {
+        return _currencies.ToList().ConvertAll(currency => new CurrencyDTO(currency.Value));
+    }
+
+    public CurrencyDTO Get(ECurrencyType type)
+    {
+        return new CurrencyDTO(_currencies[type]);
     }
 
     public void Add(ECurrencyType type, int value)
@@ -43,12 +82,20 @@ public class CurrencyManager : MonoBehaviour
         // 관리는 매니져, 규칙은 도메인
         // 도메인 클래스에서 유효성 검사 해야 함
         _currencies[type].Add(value);
-
-        Debug.Log($"{type} 현재 값: {_currencies[type].Value}");
+        _repository.Save(ToDtoList());
+        OnDataChanged?.Invoke();
     }
 
-    public void Subtract(ECurrencyType type, int value)
+    public bool TryBuy(ECurrencyType type, int value)
     {
-        _currencies[type].Subtract(value);
+        if(!_currencies[type].TryBuy(value))
+        {
+            return false;
+        }
+
+        _repository.Save(ToDtoList());
+        OnDataChanged?.Invoke();
+
+        return true;
     }
 }
