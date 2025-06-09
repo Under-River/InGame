@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CurrencyRepository
+public class CurrencyPlayerPrefsRepository
 {
     // Repository: 데이터의 영속성을 보장
     // 영속성: 프로그램을 종료해도 데이터가 보존되는 것
 
-    private const string SAVE_KEY = nameof(CurrencyRepository);
+    private const string SAVE_KEY = nameof(CurrencyPlayerPrefsRepository);
     // Save
     public void Save(List<CurrencyDTO> dataList)
     {

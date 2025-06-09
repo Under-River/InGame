@@ -14,7 +14,7 @@ public class CurrencyManager : MonoBehaviour
     private Dictionary<ECurrencyType, Currency> _currencies;
     // 도메인에 변화가 있을때 호출
     public event Action OnDataChanged;
-    private CurrencyRepository _repository;
+    private CurrencyPlayerPrefsRepository _repository;
 
 
     // 로버트 C 마틴 : 미리하는 성능 최적화 90%는 필요없다.
@@ -41,7 +41,7 @@ public class CurrencyManager : MonoBehaviour
         // 초기화
         _currencies = new Dictionary<ECurrencyType, Currency>((int)ECurrencyType.Count);
         // 레포지토리(깃허브)
-        _repository = new CurrencyRepository();
+        _repository = new CurrencyPlayerPrefsRepository();
 
         List<CurrencyDTO> loadedCurrencies = _repository.Load();
         if(loadedCurrencies == null)
