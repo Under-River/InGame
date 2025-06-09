@@ -481,7 +481,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733f4e1ff483611408f4a8d4fc9202ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pools: []
+  _pools:
+  - _name: Enemy_HoverBot
+    _component: {fileID: 2015434656898269656, guid: 25a1b0efadb966e44889fce712c8ff8d,
+      type: 3}
+    _count: 10
+    _container: {fileID: 185290762}
+    _nonLazy: 1
 --- !u!4 &786669279 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6654034042119420766, guid: 6f72a8daf2a7b2d4d8c0e3438358a8f1,
@@ -616,6 +622,7 @@ GameObject:
   m_Component:
   - component: {fileID: 935862681}
   - component: {fileID: 935862680}
+  - component: {fileID: 935862682}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -650,6 +657,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &935862682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 935862679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 440c103fd3f623a45be83ef0ccdd2eaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1022098256
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1230,7 +1249,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 6806dc6b54dc6c34aa4f07c3221a914d, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &1402848969
 Transform:

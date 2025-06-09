@@ -11,7 +11,5 @@ public class Main : MonoBehaviour
 
         Currency gold = new Currency(ECurrencyType.Gold, 100);
         Currency diamond = new Currency(ECurrencyType.Diamond, 34);
-
-        gold.Add(-700);
     }
 }
