@@ -35,6 +35,7 @@ public class CurrencyPlayerPrefsRepository
         return data.DataList.ConvertAll(data => new CurrencyDTO(data.Type, data.Value));
     }
 }
+
 [Serializable]
 public struct CurrencySaveData
 {
@@ -42,6 +43,7 @@ public struct CurrencySaveData
     public int Value;
 }
 
+ [Serializable]
 public struct CurrencySaveDatas
 {
     public List<CurrencySaveData> DataList;

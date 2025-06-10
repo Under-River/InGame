@@ -29,6 +29,8 @@ namespace Unity.FPS.UI
         [Tooltip("GameObject for the controls")]
         public GameObject ControlImage;
 
+        [SerializeField] private GameObject UI_Achievement;
+
         PlayerInputHandler m_PlayerInputsHandler;
         Health m_PlayerHealth;
         FramerateCounter m_FramerateCounter;
@@ -115,6 +117,8 @@ namespace Unity.FPS.UI
                 AudioUtility.SetMasterVolume(VolumeWhenMenuOpen);
 
                 EventSystem.current.SetSelectedGameObject(null);
+
+                UI_Achievement.SetActive(true);
             }
             else
             {
@@ -122,6 +126,8 @@ namespace Unity.FPS.UI
                 Cursor.visible = false;
                 Time.timeScale = 1f;
                 AudioUtility.SetMasterVolume(1);
+
+                UI_Achievement.SetActive(false);
             }
 
         }

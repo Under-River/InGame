@@ -83,6 +83,16 @@ public class CurrencyManager : MonoBehaviour
         // 도메인 클래스에서 유효성 검사 해야 함
         _currencies[type].Add(value);
         _repository.Save(ToDtoList());
+
+        if(type == ECurrencyType.Gold)
+        {
+            AchievementManager.Instance.Increase(EAchievementCondition.GoldCollect, value);
+        }
+        else if(type == ECurrencyType.Diamond)
+        {
+            // AchievementManager.Instance.Increase(EAchievementCondition.DiamondCollect, value);
+        }
+
         OnDataChanged?.Invoke();
     }
 
