@@ -1,19 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UI_Achievement : MonoBehaviour
 {
     [SerializeField] private Transform _slotParent;
     [SerializeField] private GameObject _slotPrefab;
-    [SerializeField] private GameObject _canClaimRewardMessage;
     private List<UI_AchievementSlot> _slots;
     private void Start()
     {
         Init();
         Refresh();
         AchievementManager.Instance.OnDataChanged += Refresh;
-        AchievementManager.Instance.OnNewAchievementRewarded += Refresh;
     }
     private void Init()
     {
@@ -34,17 +33,5 @@ public class UI_Achievement : MonoBehaviour
         {
             _slots[i].Refresh(achievements[i]);
         }
-    }
-
-    private void Refresh(AchievementDTO achievementDTO)
-    {
-        Refresh();
-        StartCoroutine(PlayRewardAnimation());
-    }
-    private IEnumerator PlayRewardAnimation()
-    {
-        _canClaimRewardMessage.SetActive(true);
-        yield return new WaitForSeconds(2f);
-        _canClaimRewardMessage.SetActive(false);
     }
 }
