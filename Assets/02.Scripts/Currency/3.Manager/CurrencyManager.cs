@@ -12,8 +12,6 @@ public class CurrencyManager : MonoBehaviour
     public static CurrencyManager Instance;
 
     private Dictionary<ECurrencyType, Currency> _currencies;
-    // 도메인에 변화가 있을때 호출
-    public event Action OnDataChanged;
     private CurrencyPlayerPrefsRepository _repository;
 
 
@@ -32,7 +30,10 @@ public class CurrencyManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
 
+    private void Start()
+    {
         Init();
     }
 
@@ -93,7 +94,7 @@ public class CurrencyManager : MonoBehaviour
             // AchievementManager.Instance.Increase(EAchievementCondition.DiamondCollect, value);
         }
 
-        OnDataChanged?.Invoke();
+        UnityEventManager.Instance.OnChangedCurrency.Invoke();
     }
 
     public bool TryBuy(ECurrencyType type, int value)
@@ -104,7 +105,7 @@ public class CurrencyManager : MonoBehaviour
         }
 
         _repository.Save(ToDtoList());
-        OnDataChanged?.Invoke();
+        UnityEventManager.Instance.OnChangedCurrency.Invoke();
 
         return true;
     }

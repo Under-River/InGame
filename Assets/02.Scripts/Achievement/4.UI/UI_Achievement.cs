@@ -8,15 +8,14 @@ public class UI_Achievement : MonoBehaviour
     [SerializeField] private Transform _slotParent;
     [SerializeField] private GameObject _slotPrefab;
     private List<UI_AchievementSlot> _slots;
-    private void Start()
+    private void Awake()
     {
-        Init();
-        Refresh();
-        AchievementManager.Instance.OnDataChanged += Refresh;
+        AchievementManager.OnDataInitialized += Init;
     }
+   
     private void Init()
     {
-        List<AchievementDTO> achievements = AchievementManager.Instance.Achievements();
+        List<AchievementDTO> achievements = AchievementManager.Instance.Achievements;
         _slots = new List<UI_AchievementSlot>();
 
         for(int i = 0; i < achievements.Count; i++)
@@ -24,10 +23,11 @@ public class UI_Achievement : MonoBehaviour
             GameObject slot = Instantiate(_slotPrefab, _slotParent);
             _slots.Add(slot.GetComponent<UI_AchievementSlot>());
         }
+        Refresh();
     }
-    private void Refresh()
+    public void Refresh()
     {
-        List<AchievementDTO> achievements = AchievementManager.Instance.Achievements();
+        List<AchievementDTO> achievements = AchievementManager.Instance.Achievements;
 
         for(int i = 0; i < achievements.Count; i++)
         {

@@ -5,14 +5,11 @@ using UnityEngine;
 public class AchievementManager : MonoBehaviour
 {
     public static AchievementManager Instance;
+    public static event Action OnDataInitialized;
 
     [SerializeField] private List<AchievementSO> _metaDatas;
     private List<Achievement> _achievements;
-    public List<AchievementDTO> Achievements() => _achievements.ConvertAll(achievement => new AchievementDTO(achievement));
-
-    public event Action OnDataChanged;
-    public event Action<AchievementDTO> OnNewAchievementRewarded;
-
+    public List<AchievementDTO> Achievements => _achievements.ConvertAll(achievement => new AchievementDTO(achievement));
     private AchievementPlayerPrefsRepository _repository;
 
     private void Awake()
@@ -26,7 +23,9 @@ public class AchievementManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
+    }
+    private void Start()
+    {
         Init();
     }
 
@@ -50,6 +49,7 @@ public class AchievementManager : MonoBehaviour
             Achievement achievement = new Achievement(metaData, saveData);
             _achievements.Add(achievement);
         }
+        OnDataInitialized?.Invoke();
     }
 
     private Achievement FindByID(string id)
@@ -69,12 +69,12 @@ public class AchievementManager : MonoBehaviour
 
                 if(prevCanClaimReward != canClaimReward)
                 {
-                    OnNewAchievementRewarded?.Invoke(new AchievementDTO(achievement));
+                    UnityEventManager.Instance.OnClearAchievement.Invoke(new AchievementDTO(achievement));
                 }
             }
         }
-        _repository.Save(Achievements());
-        OnDataChanged?.Invoke();
+        _repository.Save(Achievements);
+        UnityEventManager.Instance.OnChangedAchievement.Invoke();
     }
 
     public bool TryClaimReward(AchievementDTO achievementDTO)
@@ -89,8 +89,8 @@ public class AchievementManager : MonoBehaviour
         if(achievement.TryClaimReward())
         {
             CurrencyManager.Instance.Add(achievement.RewardCurrencyType, achievement.RewardAmount);
-            _repository.Save(Achievements());
-            OnDataChanged?.Invoke();
+            _repository.Save(Achievements);
+            UnityEventManager.Instance.OnChangedAchievement.Invoke();
             return true;
         }
 

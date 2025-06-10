@@ -12,7 +12,6 @@ public class UI_Currency : MonoBehaviour
     private void Start()
     {
         Refresh();
-        CurrencyManager.Instance.OnDataChanged += Refresh;
     }
 
     private void Update()

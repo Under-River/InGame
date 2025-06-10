@@ -10,9 +10,8 @@ public class UI_AchievementAlarm : MonoBehaviour
     private void Start()
     {
         _canClaimRewardMessage.SetActive(false);
-        AchievementManager.Instance.OnNewAchievementRewarded += Alarm;
     }
-    private void Alarm(AchievementDTO achievementDTO)
+    public void Alarm(AchievementDTO achievementDTO)
     {
         _canClaimRewardMessageText.text = $"{achievementDTO.Name} 달성!";
         StartCoroutine(PlayRewardAnimation());
