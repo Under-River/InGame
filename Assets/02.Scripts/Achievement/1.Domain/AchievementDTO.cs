@@ -13,18 +13,6 @@ public class AchievementDTO
     public readonly int CurrentValue;
     public readonly bool IsRewardClaimed;
 
-    public AchievementDTO
-    (
-        string id,
-        int currentValue,
-        bool isRewardClaimed
-    )
-    {
-        Id = id;
-        CurrentValue = currentValue;
-        IsRewardClaimed = isRewardClaimed;
-    }
-
     public AchievementDTO(Achievement achievement)
     {
         Id = achievement.Id;

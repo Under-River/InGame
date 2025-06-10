@@ -20,7 +20,7 @@ public class AchievementPlayerPrefsRepository : MonoBehaviour
         PlayerPrefs.SetString(SAVE_KEY, json);
     }
 
-    public List<AchievementDTO> Load()
+    public List<AchievementSaveData> Load()
     {
         if(!PlayerPrefs.HasKey(SAVE_KEY))
         {
@@ -30,20 +30,13 @@ public class AchievementPlayerPrefsRepository : MonoBehaviour
         string json = PlayerPrefs.GetString(SAVE_KEY);
         AchievementSaveDatas data = JsonUtility.FromJson<AchievementSaveDatas>(json);
 
-        return data.DataList.ConvertAll(data => new AchievementDTO(data.Id, data.CurrentValue, data.IsRewardClaimed));
+        return data.DataList;
     }
 
-    [Serializable]
-    public struct AchievementSaveData
-    {
-        public string Id;
-        public int CurrentValue;
-        public bool IsRewardClaimed;
-    }
-    
-    [Serializable]
-    public struct AchievementSaveDatas
-    {
-        public List<AchievementSaveData> DataList;
-    }
+}
+
+[Serializable]
+public struct AchievementSaveDatas
+{
+    public List<AchievementSaveData> DataList;
 }

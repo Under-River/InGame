@@ -35,27 +35,9 @@ public class AchievementManager : MonoBehaviour
         _achievements = new List<Achievement>();
         _repository = new AchievementPlayerPrefsRepository();
 
-        List<AchievementDTO> loadedAchievements = _repository.Load();
-        if(loadedAchievements == null)
-        {
-            for(int i = 0; i < (int)EAchievementCondition.Count; i++)
-            {
-                Achievement achievement = new Achievement();
-                _achievements.Add(achievement);
-            }
-        }
-        else
-        {
-            foreach(AchievementDTO data in loadedAchievements)
-            {
-                Achievement achievement = new Achievement(_metaDatas.Find(metaData => metaData.Id == data.Id));
-                achievement.Increase(data.CurrentValue);
-                achievement.TryClaimReward();
+        List<AchievementSaveData> saveDatas = _repository.Load();
 
-                _achievements.Add(achievement);
-            }
-        }
-        foreach(var metaData in _metaDatas)
+        foreach(AchievementSO metaData in _metaDatas)
         {
             Achievement duplicateAchievement = FindByID(metaData.Id);
 
@@ -64,7 +46,8 @@ public class AchievementManager : MonoBehaviour
                 throw new Exception($"업적 ID({metaData.Id})가 중복됩니다.");
             }
 
-            Achievement achievement = new Achievement(metaData);
+            AchievementSaveData saveData = saveDatas?.Find(a => a.Id == metaData.Id) ?? new AchievementSaveData();
+            Achievement achievement = new Achievement(metaData, saveData);
             _achievements.Add(achievement);
         }
     }
@@ -105,8 +88,8 @@ public class AchievementManager : MonoBehaviour
 
         if(achievement.TryClaimReward())
         {
-            _repository.Save(Achievements());
             CurrencyManager.Instance.Add(achievement.RewardCurrencyType, achievement.RewardAmount);
+            _repository.Save(Achievements());
             OnDataChanged?.Invoke();
             return true;
         }
