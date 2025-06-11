@@ -44,7 +44,7 @@ public class CurrencyManager : MonoBehaviour
         // 레포지토리(깃허브)
         _repository = new CurrencyPlayerPrefsRepository();
 
-        List<CurrencyDTO> loadedCurrencies = _repository.Load();
+        List<CurrencyDTO> loadedCurrencies = _repository.Load(AccountManager.Instance.CurrentAccount.Email);
         if(loadedCurrencies == null)
         {
             for(int i = 0; i < (int)ECurrencyType.Count; i++)
@@ -83,7 +83,7 @@ public class CurrencyManager : MonoBehaviour
         // 관리는 매니져, 규칙은 도메인
         // 도메인 클래스에서 유효성 검사 해야 함
         _currencies[type].Add(value);
-        _repository.Save(ToDtoList());
+        _repository.Save(ToDtoList(), AccountManager.Instance.CurrentAccount.Email);
 
         if(type == ECurrencyType.Gold)
         {
@@ -104,7 +104,7 @@ public class CurrencyManager : MonoBehaviour
             return false;
         }
 
-        _repository.Save(ToDtoList());
+        _repository.Save(ToDtoList(), AccountManager.Instance.CurrentAccount.Email);
         UnityEventManager.Instance.OnChangedCurrency.Invoke();
 
         return true;
